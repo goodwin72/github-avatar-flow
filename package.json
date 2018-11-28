@@ -1,0 +1,19 @@
+{
+  "name": "github-avatar-flow",
+  "version": "1.0.0",
+  "description": "Display the avatars of public GitHub repo owners",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "client": "cd client && npm start",
+    "api": "cd api && npm start",
+    "start": "concurrently \"npm run client\" \"npm run api\" ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jared Goodwin",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "concurrently": "^4.1.0"
+  }
+}

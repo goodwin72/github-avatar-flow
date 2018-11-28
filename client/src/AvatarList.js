@@ -12,10 +12,6 @@ class User {
     this.login = login;
     this.id = id;
     this.avatarURL = avatarURL;
-
-    /* Set explicitly to 'undefined' because we don't know whether they do or don't exist
-     * for this user yet. */
-    this.followers = undefined;
   }
 }
 

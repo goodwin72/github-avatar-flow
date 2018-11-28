@@ -4,16 +4,18 @@
 ---
 
 ## Overview
-GitHub Avatar Flow displays the avatars for owners of public repositories on GitHub, and allows for more information to be shown when the user hovers over an avatar. To accomplish these goals, the software uses a browser-based client app made in React, as well as a backend server and API using Node.js and Express.
+GitHub Avatar Flow displays the avatars for owners of public repositories on GitHub. When the user hovers over certain avatars, it also displays a list of users following them. 
+
+To implement these features, the software uses a browser-based client app using React, as well as a backend server and API using Node.js and Express.
 
 ## Application Design
 ### Major systems
 
 #### Client application
-The client application utilizes React to render the **view** - the representation of the data returned from the server - to the user. It does not make requests directly to the GitHub API; instead, it makes calls to the Node API, which makes those requests and processes the returned information instead.
+The client application utilizes React to render a representation of the data returned from the server to the user. It does not make requests directly to the GitHub API; instead, it makes requests to the Node API, which in turn makes requests to GitHub and processes the information it receives before returning it to the client app.
 
 #### Backend API
-The backend uses Node and Express to create an API that will serve as a **controller**, retrieving information from the GitHub API for the client application. After receiving the information, the backend processes it, and returns to the client app only the information that it needs. 
+The backend uses Node and Express to create an API that will retrieve information from the GitHub API. After receiving the information for GitHub, the API will process it so that only the information that the client app needs is returned to it.
 
 ### Subsystems
 #### Client application
@@ -23,14 +25,18 @@ The client application consists of several components:
 - Stateless component that shows the name of the project and visually 'grounds' the page (even though there is no navigation on the site).
 
 ##### AvatarList
-- Stores the data returned from the backend in state in an array of users. This data consists of an avatar URL (string), a username (string), a user ID used as a key for each Avatar component when rendered (string), and a list of users that follow that user (array of strings).
-- Contains render logic to handle displaying a list of Avatar components and give special CSS styling to Avatars associated with a username beginning with 'A', case-insensitive.
-    - Each Avatar's React key will be its associated user's id
-- Defines an 'onHover' callback function passed to Avatar components that displays the followers for the user associated with that avatar. Like the styling above, this callback is passed to avatars associated with a username that starts with 'A', case-insensitive.
+- Stores the data returned from the backend in state in an array of users. This data consists of
+    - an avatar URL (string), 
+    - a username, referred to as a 'login' (string),
+    - a user ID (integer)
+- Contains render logic to handle displaying a list of Avatar components.
+    - Each Avatar's React key will be the **id** of its associated user.
+- Duplicate users are filtered out, and not displayed.
 
 ##### Avatar
-- Stateless component that displays the profile image for a user on GitHub.
-- Can contain the aforementioned onHover callback that displays the user's follower list.
+- Displays the profile image for a user on GitHub.
+- If the associated user's login starts with 'A', case-insensitive, displays a list of users following this user in a Bootstrap popover.
+- Stores the list of followers for this user (array of strings). This information is only requested from GitHub if the user's login starts with 'A', case-insensitive, and only when the user hovers over their avatar.
 
 #### Backend API
 The backend API will consist of two GET routes, both of which will query the GitHub API using Axios and return only the data that the frontend will need.
@@ -52,14 +58,9 @@ The backend API will consist of two GET routes, both of which will query the Git
 ![UI mockup](ui-mockup.jpg "UI mockup")
 
 ## Coding Style
-The code base will use follow the Airbnb coding style with a few modifications:
-- arrow-body-style: always
-- quote-props: always
-- prefer-const: false
-- newline-after-import: false (only disabled because it appears to be giving false positives)
+The code base will use follow the Airbnb coding style with a few modifications, enforced by the ESLint plugin. 
 
-ESLint will be used to enforce the coding style.
-(As I am new to the Airbnb style, this list may be modified over time as I discover more of the rules defined by the style.)
+These modifications can be found in the .eslintrc file - each of the applications has one. All but one were made out of personal preference. ("newline-after-import" is disabled because it appeared to be giving false-positives during production.)
 
 ## Testing
 The React frontend and the Node backend will both be tested using Jasmine. To help Jasmine test React components, Enzyme will also be used for testing the frontend (specifically, through the use of the Jasmine-Enzyme project).
@@ -68,6 +69,4 @@ The React frontend and the Node backend will both be tested using Jasmine. To he
 - React components will need to be tested for correct output and, in the case of the Avatar component, proper reaction to the onHover event.
 
 ### Backend
-- Both of the routes will be tested using a mock server to stand in-place of GitHub's servers - the app will get predetermined data from our mock server instead of the real one.
-
-- The processing functions will be tested using mock data taken from a real request, also to avoid having tests require calls to the GitHub server. (This both speeds up the tests and avoids rate limiting during development.)
+- Both of the routes will be tested to ensure they return proper status codes, return the data that the client app needs, and only the data the client app needs.
