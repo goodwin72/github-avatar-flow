@@ -1,0 +1,24 @@
+{
+  "name": "github-avatar-flow-api",
+  "version": "1.0.0",
+  "description": "Backend API for the GitHub Avatar Flow project",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine spec/app.test.js",
+    "start": "node index.js"
+  },
+  "author": "Jared Goodwin",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1",
+    "jasmine": "^3.3.0"
+  }
+}
