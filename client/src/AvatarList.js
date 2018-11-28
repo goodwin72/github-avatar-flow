@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import Avatar from './Avatar';
+import BaseURLs from './BaseURLs';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/AvatarList.css';
 
 const STARTING_REPO = 999;
 
 class User {
-  constructor(login, id, avatarURL, followersURL) {
+  constructor(login, id, avatarURL) {
     this.login = login;
     this.id = id;
     this.avatarURL = avatarURL;
-    this.followersURL = followersURL;
 
     /* Set explicitly to 'undefined' because we don't know whether they do or don't exist
      * for this user yet. */
@@ -25,18 +25,19 @@ class AvatarList extends Component {
     this.state = {
       'users': [],
       'loading': true,
+      'networkError': false,
     };
   }
 
   componentDidMount() {
-    fetch(`http://localhost:3000/repos?since=${STARTING_REPO}`)
+    fetch(`${BaseURLs.repos}${STARTING_REPO}`)
       .then((response) => {
         return response.json();
       })
       .then((response) => {
         // console.log(response);
         let responseUsers = JSON.parse(JSON.stringify(response)).map((value) => {
-          return new User(value.login, value.id, value.avatar_url, value.followers_url);
+          return new User(value.login, value.id, value.avatar_url);
         });
 
         // slice(0) creates a new array instead of copying a reference
@@ -45,12 +46,14 @@ class AvatarList extends Component {
         this.setState({
           'users': newUsers,
           'loading': false,
+          'networkError': false,
         });
       })
       .catch((error) => {
         console.log(error);
         this.setState({
           'loading': false,
+          'networkError': true,
         });
 
         return Promise.reject(error);
@@ -90,6 +93,10 @@ class AvatarList extends Component {
     let loading;
     if (this.state.loading) {
       loading = <p className='alert alert-primary' role='alert'>Loading...</p>;
+    }
+
+    if (this.state.networkError) {
+      loading = <p className='alert alert-danger' role='alert'>Failed to load from the GitHub API!</p>;
     }
 
     return (

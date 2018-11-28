@@ -1,0 +1,5 @@
+.popoverFollowers{
+    max-height: 500px;
+    overflow-y: scroll;
+    padding-right: .75em;
+}

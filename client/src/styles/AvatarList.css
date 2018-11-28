@@ -3,7 +3,7 @@
     padding: 1%;
 }
 
-.avatar__li--highlighted{
+.avatar__img--highlighted{
     border: 1px solid green;
     border-radius: 6px;
     box-shadow: 0 0 16px green;
