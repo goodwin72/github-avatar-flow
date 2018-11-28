@@ -51,6 +51,14 @@ function getFollowerList(login) {
     });
 }
 
+app.use('/*', (req, res, next) => {
+  // This should usually not be any domain, but some browsers don't accept
+  // 'localhost' as a CORS header. So for the purposes of this project - which
+  // is intended to run on localhost - the CORS header is set to '*'.
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 app.get('/repos', (req, res) => {
   getPublicRepoOwners(req.query.since)
     .then((response) => {
