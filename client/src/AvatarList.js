@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import Avatar from './Avatar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/AvatarList.css';
 
 const STARTING_REPO = 999;
 
 class User {
-  constructor(username, id, avatarURL, followersURL) {
-    this.login = username;
+  constructor(login, id, avatarURL, followersURL) {
+    this.login = login;
     this.id = id;
     this.avatarURL = avatarURL;
     this.followersURL = followersURL;
@@ -39,7 +40,7 @@ class AvatarList extends Component {
         });
 
         // slice(0) creates a new array instead of copying a reference
-        let newUsers = this.removeDuplicateUsers((this.state.users.slice(0)).concat(responseUsers));
+        let newUsers = this.removeDuplicateUsers(responseUsers);
 
         this.setState({
           'users': newUsers,
@@ -80,7 +81,7 @@ class AvatarList extends Component {
   render() {
     const avatars = this.state.users.map((value) => {
       return (
-        <li className='flex-fill' style={{ 'width': '150px', 'padding': '1%' }} key={value.id}>
+        <li className='avatar__li' key={value.id}>
           <Avatar avatarURL={value.avatarURL} login={value.login} />
         </li>
       );

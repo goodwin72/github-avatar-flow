@@ -1,0 +1,10 @@
+.avatar__li{
+    width: 150px;
+    padding: 1%;
+}
+
+.avatar__li--highlighted{
+    border: 1px solid green;
+    border-radius: 6px;
+    box-shadow: 0 0 16px green;
+}

@@ -3,10 +3,14 @@ import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Avatar = ({ avatarURL, login }) => {
+  let classes = [];
+
+  if (login.substring(0, 1) === 'a') {
+    classes.push('avatar__li--highlighted');
+  }
+
   return (
-    <div>
-      <img className='img-fluid' src={avatarURL} alt={`${login}'s avatar`} />
-    </div>
+    <img className={`img-fluid ${classes.join(' ')}`} src={avatarURL} alt={`${login}'s avatar`} />
   );
 };
 
