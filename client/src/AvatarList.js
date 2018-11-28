@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Avatar from './Avatar';
-import './styles/AvatarList.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const STARTING_REPO = 999;
 
@@ -80,7 +80,7 @@ class AvatarList extends Component {
   render() {
     const avatars = this.state.users.map((value) => {
       return (
-        <li key={value.id}>
+        <li className='flex-fill' style={{ 'width': '150px', 'padding': '1%' }} key={value.id}>
           <Avatar avatarURL={value.avatarURL} login={value.login} />
         </li>
       );
@@ -88,12 +88,12 @@ class AvatarList extends Component {
 
     let loading;
     if (this.state.loading) {
-      loading = <p>Loading...</p>;
+      loading = <p className='alert alert-primary' role='alert'>Loading...</p>;
     }
 
     return (
-      <div className='avatarList'>
-        <ul>
+      <div>
+        <ul className='d-flex flex-wrap list-unstyled'>
           {avatars}
         </ul>
         {loading}
