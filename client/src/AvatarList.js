@@ -47,6 +47,7 @@ class AvatarList extends Component {
 
     return fetch(`${BaseURLs.repos}${startingRepo}`)
       .then((response) => {
+        // console.log(response);
         return response.json();
       })
       .then((response) => {
