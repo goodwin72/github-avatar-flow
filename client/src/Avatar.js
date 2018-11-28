@@ -77,8 +77,7 @@ class Avatar extends Component {
     let popOverContent;
     if (!this.state.networkError) {
       popOverContent = `<ul class="popoverFollowers">${followerDisplayString}</ul>`;
-    }
-    else {
+    } else {
       popOverContent = 'A network error occurred';
     }
 

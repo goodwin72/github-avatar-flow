@@ -1,6 +1,10 @@
-.avatar__li{
+.avatarList__li{
     width: 150px;
     padding: 1%;
+}
+
+.avatarList__btn {
+    margin-bottom: 1em;
 }
 
 .avatar__img--highlighted{

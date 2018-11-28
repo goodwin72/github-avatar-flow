@@ -1,5 +1,9 @@
 .popoverFollowers{
-    max-height: 500px;
-    overflow-y: scroll;
+    /* These would be beneficial to UX, but onMouseLeave triggers before the
+    user can reach the scroll wheel, and I'm not sure how to deal with it
+    at the moment. */
+    /*max-height: 500px;
+    overflow-y: scroll;*/
+    
     padding-right: .75em;
 }
