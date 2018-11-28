@@ -1,5 +1,5 @@
 #GitHub Avatar Flow Code Challenge
-##Requirements Document - v1.0
+##Requirements Document - v1.1
 
 ---
 
