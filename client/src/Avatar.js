@@ -32,8 +32,6 @@ class Avatar extends Component {
         return response.json();
       })
       .then((response) => {
-        // console.log(JSON.parse(JSON.stringify(response)));
-
         this.setState({
           'followers': response,
           'networkError': false,

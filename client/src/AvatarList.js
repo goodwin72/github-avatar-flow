@@ -43,21 +43,18 @@ class AvatarList extends Component {
     if (this.state.reposRead > 0) {
       startingRepo = STARTING_REPO + this.state.reposRead;
     }
-    console.log("StaringRepo:", startingRepo);
+    // console.log("StartingRepo:", startingRepo);
 
-    fetch(`${BaseURLs.repos}${startingRepo}`)
+    return fetch(`${BaseURLs.repos}${startingRepo}`)
       .then((response) => {
         return response.json();
       })
       .then((response) => {
-        console.log("RESPONSE", response);
         return JSON.parse(JSON.stringify(response)).map((value) => {
           return new User(value.login, value.id, value.avatar_url);
         });
       })
       .then((responseUsers) => {
-        console.log("Response users: ", responseUsers);
-
         // slice(0) creates a new array instead of copying a reference
         let newUsers = this.removeDuplicateUsers(responseUsers);
         let newReposRead = this.state.reposRead + responseUsers.length;
@@ -79,7 +76,6 @@ class AvatarList extends Component {
   }
 
   removeDuplicateUsers(users) {
-    console.log('Prior to filter: ', users);
     let filteredUsers = [];
 
     for (let currentUser = 0; currentUser < users.length; currentUser += 1) {
@@ -94,7 +90,6 @@ class AvatarList extends Component {
         filteredUsers.push(users[currentUser]);
       }
     }
-    console.log('After filter: ', filteredUsers);
 
     return filteredUsers;
   }
