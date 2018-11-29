@@ -63,7 +63,9 @@ The code base will use follow the Airbnb coding style with a few modifications, 
 These modifications can be found in the .eslintrc file - each of the applications has one. All but one were made out of personal preference. ("newline-after-import" is disabled because it appeared to be giving false-positives during production.)
 
 ## Testing
-The React frontend and the Node backend will both be tested using Jasmine. To help Jasmine test React components, Enzyme will also be used for testing the frontend (specifically, through the use of the Jasmine-Enzyme project).
+The React frontend will be tested through React's built-in testing framework, which utilizes Jest and Enzyme. API calls will be mocked using jest-fetch-mock.
+
+The Node backend will be tested using Jasmine.
 
 ### Frontend
 - React components will need to be tested for correct output and, in the case of the Avatar component, proper reaction to the onHover event.
