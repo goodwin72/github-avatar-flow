@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import jQuery from 'jquery';
-import Popper from 'popper.js';
+import { Popover, PopoverHeader, PopoverBody } from 'reactstrap';
 import BaseURLs from './BaseURLs';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/Avatar.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class Avatar extends Component {
   constructor(props) {
@@ -13,20 +12,14 @@ class Avatar extends Component {
     this.state = {
       'followers': [],
       'networkError': false,
+      'popoverOpen': false,
     };
 
     this.displayFollowersPopover = this.displayFollowersPopover.bind(this);
     this.removeFollowersPopover = this.removeFollowersPopover.bind(this);
   }
 
-  componentDidMount() {
-    jQuery('[data-toggle="popover"]').popover();
-  }
-
   displayFollowersPopover(e) {
-    e.persist();
-    let temp = e.target;
-
     fetch(`${BaseURLs.followers}${this.props.login}`)
       .then((response) => {
         return response.json();
@@ -35,8 +28,7 @@ class Avatar extends Component {
         this.setState({
           'followers': response,
           'networkError': false,
-        }, () => {
-          jQuery(temp).popover('show');
+          'popoverOpen': true,
         });
       })
       .catch((error) => {
@@ -48,15 +40,15 @@ class Avatar extends Component {
   }
 
   removeFollowersPopover(e) {
-    jQuery(e.target).popover('hide');
+    this.setState({
+      'popoverOpen': false,
+    });
   }
 
   render() {
-    // Bootstrap's data-content attribute will only accept HTML as a string, so
-    //  we need to convert the followers list into a string-ified HTML list
-    let followerDisplayString = '';
-    this.state.followers.forEach((value) => {
-      followerDisplayString += `<li>${value.login}</li>`;
+    let followerDisplay = '';
+    followerDisplay = this.state.followers.map((value) => {
+      return <li>{value.login}</li>;
     });
 
     // Extra classes conditionally applied to the img
@@ -74,7 +66,11 @@ class Avatar extends Component {
 
     let popOverContent;
     if (!this.state.networkError) {
-      popOverContent = `<ul class="popoverFollowers">${followerDisplayString}</ul>`;
+      popOverContent = (
+        <ul className='popoverFollowers'>
+          {followerDisplay}
+        </ul>
+      );
     } else {
       popOverContent = 'A network error occurred';
     }
@@ -82,17 +78,22 @@ class Avatar extends Component {
     return (
       <div>
         <img
+          id='Popover1' // TEMP - CHANGE LATER
           className={`img-fluid ${classes.join(' ')}`}
           src={this.props.avatarURL}
           alt={`${this.props.login}'s avatar`}
           data-html='true'
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          data-toggle='popover'
-          data-trigger='none'
-          title={this.props.login}
-          data-content={popOverContent}
         />
+        <Popover placement='right' isOpen={this.state.popoverOpen} target='Popover1'>
+          <PopoverHeader>
+            {this.props.login}
+          </PopoverHeader>
+          <PopoverBody>
+            {popOverContent}
+          </PopoverBody>
+        </Popover>
       </div>
     );
   }

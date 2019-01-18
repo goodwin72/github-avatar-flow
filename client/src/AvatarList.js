@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import jQuery from 'jquery';
 import Avatar from './Avatar';
 import BaseURLs from './BaseURLs';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/AvatarList.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const STARTING_REPO = 999;
 
@@ -37,7 +36,7 @@ class AvatarList extends Component {
     // Hide all currently active popovers.
     // Standard Bootstrap doesn't seem to have a good way to handle
     //  popovers in a traditionally-React way - so this is a workaround.
-    jQuery('[data-toggle="popover"]').popover('hide');
+    // jQuery('[data-toggle="popover"]').popover('hide');
 
     let startingRepo = STARTING_REPO;
     if (this.state.reposRead > 0) {
