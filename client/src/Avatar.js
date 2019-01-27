@@ -1,56 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Popover, PopoverHeader, PopoverBody } from 'reactstrap';
-import BaseURLs from './BaseURLs';
 import './styles/Avatar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class Avatar extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      'followers': [],
-      'networkError': false,
-      'popoverOpen': false,
-    };
-
-    this.displayFollowersPopover = this.displayFollowersPopover.bind(this);
-    this.removeFollowersPopover = this.removeFollowersPopover.bind(this);
-  }
-
-  displayFollowersPopover(e) {
-    fetch(`${BaseURLs.followers}${this.props.login}`)
-      .then((response) => {
-        return response.json();
-      })
-      .then((response) => {
-        this.setState({
-          'followers': response,
-          'networkError': false,
-          'popoverOpen': true,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        this.setState({
-          'networkError': true,
-        });
-      });
-  }
-
-  removeFollowersPopover(e) {
-    this.setState({
-      'popoverOpen': false,
-    });
-  }
-
   render() {
-    let followerDisplay = '';
-    followerDisplay = this.state.followers.map((value) => {
-      return <li>{value.login}</li>;
-    });
-
     // Extra classes conditionally applied to the img
     let classes = [];
 
@@ -60,19 +14,9 @@ class Avatar extends Component {
     let handleMouseLeave;
     if (this.props.login.substring(0, 1) === 'a') {
       classes.push('avatar__img--highlighted');
-      handleMouseEnter = this.displayFollowersPopover;
-      handleMouseLeave = this.removeFollowersPopover;
-    }
-
-    let popOverContent;
-    if (!this.state.networkError) {
-      popOverContent = (
-        <ul className='popoverFollowers'>
-          {followerDisplay}
-        </ul>
-      );
-    } else {
-      popOverContent = 'A network error occurred';
+      console.log("HANDLE MOUSE ENTER FUNCTION: ", this.props.handleMouseEnter);
+      handleMouseEnter = () => { this.props.handleMouseEnter(this.props.login); };
+      handleMouseLeave = () => { this.props.handleMouseLeave(); };
     }
 
     return (
@@ -86,14 +30,6 @@ class Avatar extends Component {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         />
-        <Popover placement='right' isOpen={this.state.popoverOpen} target={this.props.login}>
-          <PopoverHeader>
-            {this.props.login}
-          </PopoverHeader>
-          <PopoverBody>
-            {popOverContent}
-          </PopoverBody>
-        </Popover>
       </div>
     );
   }

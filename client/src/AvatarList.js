@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Popover, PopoverHeader, PopoverBody } from 'reactstrap';
 import Avatar from './Avatar';
 import BaseURLs from './BaseURLs';
 import './styles/AvatarList.css';
@@ -23,9 +24,14 @@ class AvatarList extends Component {
       'reposRead': 0,
       'loading': true,
       'networkError': false,
+      'followers': [],
+      'popoverOpen': false,
+      'loginOfHoveredUser': null,
     };
 
     this.getNextUsersPage = this.getNextUsersPage.bind(this);
+    this.displayFollowersPopover = this.displayFollowersPopover.bind(this);
+    this.removeFollowersPopover = this.removeFollowersPopover.bind(this);
   }
 
   componentDidMount() {
@@ -35,6 +41,7 @@ class AvatarList extends Component {
   getNextUsersPage() {
     this.setState({
       'loading': true,
+      'popoverOpen': false,
     });
 
     let startingRepo = STARTING_REPO;
@@ -93,15 +100,50 @@ class AvatarList extends Component {
     return filteredUsers;
   }
 
+  displayFollowersPopover(login) {
+    fetch(`${BaseURLs.followers}${login}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((response) => {
+        this.setState({
+          'followers': response,
+          'networkError': false,
+          'popoverOpen': true,
+          'loginOfHoveredUser': login,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({
+          'networkError': true,
+        });
+      });
+  }
+
+  removeFollowersPopover() {
+    this.setState({
+      'popoverOpen': false,
+    });
+  }
+
   render() {
+    // Create an array of <li> elements storing Avatars.
     const avatars = this.state.users.map((value) => {
       return (
         <li className='avatarList__li' key={value.id}>
-          <Avatar avatarURL={value.avatarURL} login={value.login} id={value.id} />
+          <Avatar
+            avatarURL={value.avatarURL}
+            login={value.login}
+            id={value.id}
+            handleMouseEnter={this.displayFollowersPopover}
+            handleMouseLeave={this.removeFollowersPopover}
+          />
         </li>
       );
     });
 
+    // Display loading notification or the load more button, depending on current loading status.
     let loading;
     let loadMoreButton;
     if (this.state.loading) {
@@ -110,8 +152,26 @@ class AvatarList extends Component {
       loadMoreButton = <button className='btn btn-lg btn-outline-primary avatarList__btn' type='button' onClick={this.getNextUsersPage}>Load next</button>;
     }
 
+    // If there has been a network error, display an error message.
     if (this.state.networkError) {
       loading = <p className='alert alert-danger' role='alert'>Failed to load from the GitHub API!</p>;
+    }
+
+    // If follower data has been stored in state, create an array of <li> elements storing that data.
+    let followerDisplay = '';
+    followerDisplay = this.state.followers.map((value) => {
+      return <li>{value.login}</li>;
+    });
+
+    let popOverContent;
+    if (!this.state.networkError) {
+      popOverContent = (
+        <ul className='popoverFollowers'>
+          {followerDisplay}
+        </ul>
+      );
+    } else {
+      popOverContent = 'A network error occurred';
     }
 
     return (
@@ -121,6 +181,14 @@ class AvatarList extends Component {
         </ul>
         {loading}
         {loadMoreButton}
+        <Popover placement='right' isOpen={this.state.popoverOpen} target={this.state.loginOfHoveredUser}>
+          <PopoverHeader>
+            {this.state.loginOfHoveredUser}
+          </PopoverHeader>
+          <PopoverBody>
+            {popOverContent}
+          </PopoverBody>
+        </Popover>
       </div>
     );
   }
