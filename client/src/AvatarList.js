@@ -33,10 +33,9 @@ class AvatarList extends Component {
   }
 
   getNextUsersPage() {
-    // Hide all currently active popovers.
-    // Standard Bootstrap doesn't seem to have a good way to handle
-    //  popovers in a traditionally-React way - so this is a workaround.
-    // jQuery('[data-toggle="popover"]').popover('hide');
+    this.setState({
+      'loading': true,
+    });
 
     let startingRepo = STARTING_REPO;
     if (this.state.reposRead > 0) {
