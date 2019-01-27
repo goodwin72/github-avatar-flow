@@ -78,7 +78,7 @@ class Avatar extends Component {
     return (
       <div>
         <img
-          id='Popover1' // TEMP - CHANGE LATER
+          id={this.props.login}
           className={`img-fluid ${classes.join(' ')}`}
           src={this.props.avatarURL}
           alt={`${this.props.login}'s avatar`}
@@ -86,7 +86,7 @@ class Avatar extends Component {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         />
-        <Popover placement='right' isOpen={this.state.popoverOpen} target='Popover1'>
+        <Popover placement='right' isOpen={this.state.popoverOpen} target={this.props.login}>
           <PopoverHeader>
             {this.props.login}
           </PopoverHeader>

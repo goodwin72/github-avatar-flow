@@ -98,7 +98,7 @@ class AvatarList extends Component {
     const avatars = this.state.users.map((value) => {
       return (
         <li className='avatarList__li' key={value.id}>
-          <Avatar avatarURL={value.avatarURL} login={value.login} />
+          <Avatar avatarURL={value.avatarURL} login={value.login} id={value.id} />
         </li>
       );
     });
