@@ -26,6 +26,7 @@ class AvatarList extends Component {
       'networkError': false,
       'followers': [],
       'popoverOpen': false,
+      'popoverLoading': false,
       'loginOfHoveredUser': null,
     };
 
@@ -101,6 +102,12 @@ class AvatarList extends Component {
   }
 
   displayFollowersPopover(login) {
+    this.setState({
+      'popoverOpen': true,
+      'popoverLoading': true,
+      'loginOfHoveredUser': login,
+    });
+
     fetch(`${BaseURLs.followers}${login}`)
       .then((response) => {
         return response.json();
@@ -109,14 +116,14 @@ class AvatarList extends Component {
         this.setState({
           'followers': response,
           'networkError': false,
-          'popoverOpen': true,
-          'loginOfHoveredUser': login,
+          'popoverLoading': false,
         });
       })
       .catch((error) => {
         console.log(error);
         this.setState({
           'networkError': true,
+          'popoverLoading': false,
         });
       });
   }
@@ -163,15 +170,19 @@ class AvatarList extends Component {
       return <li>{value.login}</li>;
     });
 
-    let popOverContent;
-    if (!this.state.networkError) {
-      popOverContent = (
+    let popoverContent;
+    if (!this.state.networkError && !this.state.popoverLoading) {
+      popoverContent = (
         <ul className='popoverFollowers'>
           {followerDisplay}
         </ul>
       );
+    } else if (this.state.networkError) {
+      popoverContent = 'A network error occurred';
+    } else if (this.state.popoverLoading) {
+      popoverContent = 'Loading...';
     } else {
-      popOverContent = 'A network error occurred';
+      popoverContent = 'An unknown error occurred. (Sorry!)'
     }
 
     return (
@@ -186,7 +197,7 @@ class AvatarList extends Component {
             {this.state.loginOfHoveredUser}
           </PopoverHeader>
           <PopoverBody>
-            {popOverContent}
+            {popoverContent}
           </PopoverBody>
         </Popover>
       </div>
