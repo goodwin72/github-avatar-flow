@@ -137,37 +137,63 @@ class AvatarList extends Component {
   render() {
     // Create an array of <li> elements storing Avatars.
     const avatars = this.state.users.map((value) => {
+      // Handle passing special arguments to hoverable Avatars
+      let hoverable = false;
+      let extraClasses = [];
+      if (value.login.substring(0, 1) === 'a') {
+        hoverable = true;
+        extraClasses.push('avatar__img--highlighted');
+      }
+
       return (
         <li className='avatarList__li' key={value.id}>
           <Avatar
             avatarURL={value.avatarURL}
             login={value.login}
             id={value.id}
-            handleMouseEnter={this.displayFollowersPopover}
-            handleMouseLeave={this.removeFollowersPopover}
+            extraClasses={extraClasses.join('')}
+            handleMouseEnter={hoverable ? () => { this.displayFollowersPopover(value.login); } : undefined}
+            handleMouseLeave={hoverable ? () => { this.removeFollowersPopover(); } : undefined}
           />
         </li>
       );
     });
 
-    // Display loading notification or the load more button, depending on current loading status.
+    // Display loading notification or the load more button, depending on
+    // current loading status.
     let loading;
     let loadMoreButton;
     if (this.state.loading) {
       loading = <p className='alert alert-primary' role='alert'>Loading...</p>;
     } else {
-      loadMoreButton = <button className='btn btn-lg btn-outline-primary avatarList__btn' type='button' onClick={this.getNextUsersPage}>Load next</button>;
+      loadMoreButton = (
+        <button
+          className='btn btn-lg btn-outline-primary avatarList__btn'
+          type='button'
+          onClick={this.getNextUsersPage}
+        >
+          Load next
+        </button>
+      );
     }
 
     // If there has been a network error, display an error message.
     if (this.state.networkError) {
-      loading = <p className='alert alert-danger' role='alert'>Failed to load from the GitHub API!</p>;
+      loading = (
+        <p
+          className='alert alert-danger'
+          role='alert'
+        >
+          Failed to load from the GitHub API!
+        </p>
+      );
     }
 
-    // If follower data has been stored in state, create an array of <li> elements storing that data.
+    // If follower data has been stored in state, create an array of <li>
+    // elements storing that data.
     let followerDisplay = '';
     followerDisplay = this.state.followers.map((value) => {
-      return <li>{value.login}</li>;
+      return <li key={value.id}>{value.login}</li>;
     });
 
     let popoverContent;
@@ -182,7 +208,7 @@ class AvatarList extends Component {
     } else if (this.state.popoverLoading) {
       popoverContent = 'Loading...';
     } else {
-      popoverContent = 'An unknown error occurred. (Sorry!)'
+      popoverContent = 'An unknown error occurred. (Sorry!)';
     }
 
     return (
@@ -192,7 +218,11 @@ class AvatarList extends Component {
         </ul>
         {loading}
         {loadMoreButton}
-        <Popover placement='right' isOpen={this.state.popoverOpen} target={this.state.loginOfHoveredUser}>
+        <Popover
+          placement='right'
+          isOpen={this.state.popoverOpen}
+          target={this.state.loginOfHoveredUser}
+        >
           <PopoverHeader>
             {this.state.loginOfHoveredUser}
           </PopoverHeader>

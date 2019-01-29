@@ -1,43 +1,36 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './styles/Avatar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-class Avatar extends Component {
-  render() {
-    // Extra classes conditionally applied to the img
-    let classes = [];
+const Avatar = (props) => {
+  return (
+    <div>
+      <img
+        id={props.login}
+        className={`img-fluid ${props.extraClasses}`}
+        src={props.avatarURL}
+        alt={`${props.login}'s avatar`}
+        data-html='true'
+        onMouseEnter={props.handleMouseEnter}
+        onMouseLeave={props.handleMouseLeave}
+      />
+    </div>
+  );
+};
 
-    // This will have the onHover callback for Avatars with logins that start
-    //  with 'a' or 'A' - otherwise, this will be empty.
-    let handleMouseEnter;
-    let handleMouseLeave;
-    if (this.props.login.substring(0, 1) === 'a') {
-      classes.push('avatar__img--highlighted');
-      console.log("HANDLE MOUSE ENTER FUNCTION: ", this.props.handleMouseEnter);
-      handleMouseEnter = () => { this.props.handleMouseEnter(this.props.login); };
-      handleMouseLeave = () => { this.props.handleMouseLeave(); };
-    }
-
-    return (
-      <div>
-        <img
-          id={this.props.login}
-          className={`img-fluid ${classes.join(' ')}`}
-          src={this.props.avatarURL}
-          alt={`${this.props.login}'s avatar`}
-          data-html='true'
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        />
-      </div>
-    );
-  }
-}
+Avatar.defaultProps = {
+  'handleMouseEnter': undefined,
+  'handleMouseLeave': undefined,
+  'extraClasses': '',
+};
 
 Avatar.propTypes = {
   'avatarURL': PropTypes.string.isRequired,
   'login': PropTypes.string.isRequired,
+  'handleMouseEnter': PropTypes.func,
+  'handleMouseLeave': PropTypes.func,
+  'extraClasses': PropTypes.string,
 };
 
 export default Avatar;
