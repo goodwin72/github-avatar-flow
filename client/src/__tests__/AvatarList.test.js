@@ -49,7 +49,7 @@ describe('<AvatarList />', () => {
     // Wait for the DOM to be re-rendered.
     setTimeout(() => {
       // console.log(wrapper.debug());
-      expect(wrapper.update().find(Avatar).length).toBe(2);
+      expect(wrapper.find(Avatar).length).toBe(2);
       done();
     }, 0);
   });
