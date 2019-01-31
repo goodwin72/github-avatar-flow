@@ -31,6 +31,7 @@ class AvatarList extends Component {
     };
 
     this.getNextUsersPage = this.getNextUsersPage.bind(this);
+    this.fetchUsers = this.fetchUsers.bind(this);
     this.displayFollowersPopover = this.displayFollowersPopover.bind(this);
     this.removeFollowersPopover = this.removeFollowersPopover.bind(this);
   }
@@ -51,7 +52,7 @@ class AvatarList extends Component {
     }
     // console.log("StartingRepo:", startingRepo);
 
-    return fetch(`${BaseURLs.repos}${startingRepo}`)
+    return this.fetchUsers(startingRepo)
       .then((response) => {
         // console.log(response);
         return response.json();
@@ -80,6 +81,12 @@ class AvatarList extends Component {
           'networkError': true,
         });
       });
+  }
+
+  // Abstracted to its own function for easier testing - the function can be replaced
+  //  easily by a mock.
+  fetchUsers(startingRepo) {
+    return fetch(`${BaseURLs.repos}${startingRepo}`);
   }
 
   removeDuplicateUsers(users) {

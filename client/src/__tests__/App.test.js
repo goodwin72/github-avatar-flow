@@ -1,6 +1,5 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import ReactDOM from 'react-dom';
 import App from '../App';
 import Navbar from '../Navbar';
 import AvatarList from '../AvatarList';
